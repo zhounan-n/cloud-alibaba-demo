@@ -7,6 +7,8 @@ import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +16,8 @@ import java.util.List;
 /**
  * Created by zhoun on 2019-07-12
  */
+@RestController
+@RequestMapping("test")
 public class SetinelController {
 
     public static void main(String[] args){
@@ -21,6 +25,7 @@ public class SetinelController {
         initFlowRules();
         while(true){
             try{
+                //SphU方式埋点
                 Entry entry = SphU.entry("HelloWorld");
                 //被保护的逻辑
                 System.out.println("hello world");
@@ -33,7 +38,7 @@ public class SetinelController {
 
     }
 
-    //定义规则
+    //定义规则[此种方式代码配置  可以通过控制台配置]
     private static void initFlowRules(){
         List<FlowRule> rules = new ArrayList<>();
         FlowRule flowRule = new FlowRule();
@@ -53,4 +58,11 @@ public class SetinelController {
         System.out.println("hello world");
     }
 
+
+    //注解方式埋点
+    @SentinelResource("resource")
+    @RequestMapping("hello")
+    public String hello() {
+        return "Hello";
+    }
 }
